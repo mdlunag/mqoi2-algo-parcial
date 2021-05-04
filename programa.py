@@ -4,10 +4,19 @@ import time
 
 Tinici = time.time()
 d=extreure_dades('ejemplar.txt')
-Irap,Irbp,Iela,Ipeca,Ipeca_ds,ID=generar_indicadors(d)
-print(d)
 
 #Preproces
+
+#nova demanda
+DS=d['DS']
+PECA=d['PECA']
+DS_nova=[]
+for i in range(len(DS)):
+    DS_nova.append(DS[i]/PECA[i])
+d['D']=DS_nova
+print(DS_nova)
+
+
 #escollim el ECA de cada illa
 ECA_i=0
 l_ECA=[]
@@ -20,7 +29,7 @@ for i in range(d['N']):
                 ECA_i=e
                 cost=d['CECA'][e]
     l_ECA.append(ECA_i)
-    print(l_ECA)
+print(l_ECA)
 
 #candidats RAP
 candidats_RAP=[]
@@ -46,13 +55,19 @@ for i in range(d['N']):
 
 print(candidats_RBP)
 
+#Generem indicadors
 
+IC,ICC,ICM,IDmin,IDmax,Ippi=generar_indicadors(d)
+print([IC,ICC,ICM,IDmin, IDmax, Ippi])
+print(d)
+print(len(d['PPI'][2]))
 
 #heuristica4
-
+'''
 ID_h1=ID
 while len(ID_h1)>0:
     illa=ID_h1[0]
     index=illa[1]
     DS=illa[0]
     RAP=
+'''
