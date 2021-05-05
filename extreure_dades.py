@@ -28,7 +28,7 @@ def extreure_dades(exemplar):
     for ppi in l[3:3+N]:
         l_ppi=ppi.split('*') #llista dels valors de PPI de la fila i
         for e in l_ppi:
-            l_ppi_int.append(float(e))
+            l_ppi_int.append(float(e)/100)
         PPI.append(l_ppi_int)
         l_ppi_int=[]
     dicc_dades['PPI']=PPI #llista on cada element es una llista amb les perdues PPIij de la illa i

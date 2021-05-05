@@ -25,6 +25,8 @@ def generar_indicadors(d):
     ICMrbp= [(capac_RBP[i],i) for i in range(len(cost_RBP))]
     ICMela= [(capac_ELA[i],i) for i in range(len(cost_ELA))]
 
+    
+
     ID= [(DS[i],i) for i in range(len(DS))]
 
     sumppi=[]
