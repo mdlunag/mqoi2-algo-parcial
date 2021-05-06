@@ -3,7 +3,7 @@ from indicadors import generar_indicadors
 from triar_ela import millor_ela
 import time
 
-Tinici = time.time()
+temps_inici = time.time()
 d=extreure_dades('ejemplar_2.txt')
 
 #Preproces
@@ -75,10 +75,11 @@ us_dispos=l[:]
 
 enviaments=[] #a quines illes envia l'illa i
 cost=[]
-elems=[]
+elems=[] #elements triats pr cada illa i, rap,rbp,ela
 enviats=[]
 l_sol=[]
- #elements triats pr cada illa i, rap,rbp,ela
+l_sol_print=[]
+nsol=0
 
 for ie in range(len(l_ie)):
     Ie=l_ie[ie][:]
@@ -146,35 +147,46 @@ for ie in range(len(l_ie)):
                     else:
                         us_dispos[illa]=us_sobrant
                     elem_illa[illa][2]=ela
-                    print(us_dispos, us_sobrant, demanda)
+                    #print(us_dispos, us_sobrant, demanda)
 
                     cost_acum += d['CELA'][ela]
-
+        nsol+=1
         for i in range(d['N']):
             elem_illa[i][3]=l_ECA[i]
             cost_acum+=d['CECA'][l_ECA[i]]
-        temps_final=time.time()
-        solucio=[cost_acum,temps_final, elem_illa,enviaments]
+        temps_final_i=time.time()-temps_inici
+        solucio=[cost_acum,temps_final_i, elem_illa,enviaments]
 
 
-        if l_sol==[]:
-            l_sol.append([solucio[0],solucio[1]])
+        if l_sol_print==[]:
+            l_sol_print.append([solucio[0],solucio[1],nsol])
 
         else:
-            sol_anterior=l_sol[-1]
+            sol_anterior=l_sol_print[-1]
             if solucio[0]<sol_anterior[0]:
-                l_sol.append([solucio[0],solucio[1]])
+                l_sol_print.append([solucio[0],solucio[1],nsol])
                 print('a')
 
         cost.append(cost_acum)
         elems.append(elem_illa)
         enviats.append(enviaments)
+        l_sol.append(solucio)
 
-millor_sol=l_sol[-1]
+temps_final=time.time()-temps_inici
+#per escriure fitxer
+millor_sol=l_sol[l_sol_print[-1][2]-1]
+for i in range(len(elems)):
+    for i2,e2 in enumerate(elems[i]):
+        for i3,e3 in enumerate(elems[i][i2]):
+            elems[i][i2][i3] = elems[i][i2][i3]+1
+
+for i in range(len(enviats)):
+    for i2 in range(len(enviats[i])):
+        for i3,e in enumerate(enviats[i][i2]):
+                enviats[i][i2][i3]=e+1
+
 
         #print(elem_illa)
-
-
 
 
 
@@ -184,6 +196,31 @@ print(enviats)
 
 print(cost)
 
-print(l_sol)
+print(l_sol_print)
 
+print(millor_sol[2])
+
+
+with open('sol.txt', 'w') as f:
+    for sol in l_sol_print:
+        f.write(f"{sol[0]}*{sol[1]}\n")
+    f.write(f'{len(l_sol_print) - 1}\n')
+    f.write(f"{l_sol_print[-1][0]}*{temps_final}\n")
+    for e in (millor_sol[2]):
+        f.write(f"{e[0]}*{e[1]}*{e[2]}*{e[3]}\n")
+    for e in(millor_sol[3]):
+        if e ==[]:
+            f.write('0\n')
+        else:
+            e_str=map(str,e)
+            f.write(f"{len(e)}*{'*'.join(e_str)}\n")
+
+
+
+
+
+
+
+
+#solucio=[cost_acum,temps_final, elem_illa,enviaments]
 #si rebo 100 al RAP, demanda de 50, puc enviar 50 al ELA
