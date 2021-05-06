@@ -1,13 +1,14 @@
-def millor_ela(d,indicador, cap_min):
+def millor_ela(d,indicador, us_sobrant):
     candidats=[]
     candidats_ELA=[]
-    ela='no'
+    ela=-1
     for i in range(d['NELA']):
-        if cap_min<=d['CMELA'][i]:
+        if us_sobrant<=d['CMELA'][i]:
             candidats_ELA.append(i)
 
     if candidats_ELA==[]:
         ela=indicador[0][1]
+        return ela
 
     else:
         ela=-1
@@ -16,4 +17,3 @@ def millor_ela(d,indicador, cap_min):
             ela=indicador[nela][1]
             nela+=1
         return  ela
-    return ela
