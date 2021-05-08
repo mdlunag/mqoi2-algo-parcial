@@ -5,7 +5,7 @@ import time
 from heuristica3 import heuristica3
 
 temps_inici = time.time()
-d=extreure_dades('ejemplar_2.txt')
+d=extreure_dades('ejemplar.txt')
 
 #PREPROCES
 #nova demanda
@@ -61,27 +61,16 @@ IC,ICC,ICM,IDmin,IDmax,Ippi=generar_indicadors(d)
 
 
 #heuristica3
-#l_ie=[IC,ICC,ICM]
-#l_ii=[IDmin, IDmax, Ippi]
+l_ie=[IC,ICC, ICM]
+l_ii=[IDmin, IDmax, Ippi]
 
-l_ie=[IC]
-l_ii=[IDmax]
+#l_ie=[ICM]
+#l_ii=[IDmax]
 
 elems, enviats, cost, l_sol_print, l_sol=heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP,l_ECA, temps_inici)
 temps_final=time.time()-temps_inici
 millor_sol=l_sol[l_sol_print[-1][2]-1]
 
-#Prints per comprovar
-
-print(elems)
-
-print(enviats)
-
-print(cost)
-
-print(l_sol_print)
-
-print(millor_sol[2])
 
 #escriure fitxer solucio
 
@@ -98,6 +87,21 @@ with open('sol.txt', 'w') as f:
         else:
             e_str=map(str,e)
             f.write(f"{len(e)}*{'*'.join(e_str)}\n")
+
+
+#Prints per comprovar
+
+#print('elems',elems)
+
+#print('enviats',enviats)
+
+print('COST',cost)
+
+#print('l_sol_print',l_sol_print)
+
+#print('millor_sol_enviaments',millor_sol[3])
+
+print('nombre illes: ',d['N'])
 
 
 
