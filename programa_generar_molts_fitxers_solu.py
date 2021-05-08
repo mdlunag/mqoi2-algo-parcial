@@ -7,7 +7,7 @@ from heuristica3 import heuristica3
 l_millors_sol=[]
 temps_inici = time.time()
 for e in range(1,101):
-    d=extreure_dades(f'exemplars/ejemplar_prueba_{e}.txt')
+    d=extreure_dades(f'exemplars_100_fitxers_prova/ejemplar_prueba_{e}.txt')
 
     #PREPROCES
     #nova demanda
@@ -78,7 +78,7 @@ for e in range(1,101):
     #escriure fitxer solucio
     '''
     for e in range(1,101):
-        with open(f'solus/sol_{e}.txt', 'w') as f:
+        with open(f'solus_100_fitxers_prova/sol_{e}.txt', 'w') as f:
             for sol in l_sol_print:
                 f.write(f"{sol[0]}*{sol[1]}\n")
             f.write(f'{len(l_sol_print) - 1}\n')
@@ -95,7 +95,7 @@ for e in range(1,101):
     print('nombre illes: ',d['N'])
     l_millors_sol.append(millor_sol)
 
-with open('solTOT.txt', 'w') as f:
+with open('sol_100_fitxers_prova.txt', 'w') as f:
     for sol in l_millors_sol:
         f.write(f'{sol[0]}\n')
 
