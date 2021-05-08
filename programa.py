@@ -15,7 +15,7 @@ DS_nova=[]
 for i in range(len(DS)):
     DS_nova.append(DS[i]/(1-PECA[i]))
 d['DS']=DS_nova
-print(DS_nova)
+print('DS_nova',DS_nova)
 
 #escollim el ECA de cada illa
 ECA_i=0
@@ -29,7 +29,7 @@ for i in range(d['N']):
                 ECA_i=e
                 cost=d['CECA'][e]
     l_ECA.append(ECA_i)
-print(l_ECA)
+#print(l_ECA)
 
 #candidats RAP
 candidats_RAP=[]
@@ -41,7 +41,7 @@ for i in range(d['N']):
     candidats_RAP.append(candidats_RAP_i)
     candidats_RAP_i=[]
 
-print(candidats_RAP)
+#print(candidats_RAP)
 
 #candidats RBP
 candidats_RBP=[]
@@ -53,7 +53,7 @@ for i in range(d['N']):
     candidats_RBP.append(candidats_RBP_i)
     candidats_RBP_i=[]
 
-print(candidats_RBP)
+#print(candidats_RBP)
 
 #Generem indicadors
 
@@ -97,9 +97,9 @@ with open('sol.txt', 'w') as f:
 
 print('COST',cost)
 
-#print('l_sol_print',l_sol_print)
+print('l_sol_print',l_sol_print)
 
-#print('millor_sol_enviaments',millor_sol[3])
+print('millor_sol',millor_sol)
 
 print('nombre illes: ',d['N'])
 

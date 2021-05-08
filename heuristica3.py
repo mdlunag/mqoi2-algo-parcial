@@ -23,7 +23,6 @@ def heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici):
                 elem_illa.append([-1,-1,-1,-1])
                 enviaments.append([])
                 us_dispos.append(0)
-            print('indicador ii',l_ii[ii])
 
             while len(Ii)>0:
 
@@ -99,13 +98,13 @@ def heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici):
                 elem_illa[i][3]=l_ECA[i]
                 cost_acum+=d['CECA'][l_ECA[i]]
 
-                if enviaments[i]==[] and us_dispos[i]!= 0: #treure ELAs q no envien
-                    elem_illa[i][2]=-1
+                if enviaments[i]==[] and us_dispos[i]!= 0 and elem_illa[i][2]!=-1 and elem_illa[i][0]!=-1: #treure ELAs q no envien
+
                     cost_acum-=d['CELA'][elem_illa[i][2]]
+                    elem_illa[i][2]=-1
 
 
             temps_final_i=time.time()-temps_inici
-            print(cost_acum)
             solucio=[cost_acum,temps_final_i, elem_illa,enviaments]
 
 
@@ -131,7 +130,7 @@ def heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici):
             enviats.append(enviaments)
             l_sol.append(solucio)
 
-            print('soluuu',solucio)
+            #print('soluuu',solucio)
 
 
     return elems, enviats, cost, l_sol_print, l_sol
