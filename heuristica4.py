@@ -1,12 +1,12 @@
 import time
 
-def heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici):
+def heuristica4(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici,l_sol_print):
     illa=None
     cost=[]
     elems=[] #elements triats pr cada illa i, rap,rbp,ela
     enviats=[]
-    l_sol=[]
-    l_sol_print=[]
+    l_sol4=[]
+    l_sol_print4=[]
     nsol=0
 
     for ie in range(len(l_ie)):
@@ -49,42 +49,44 @@ def heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici):
                 nrap=0
                 nrbp=0
 
-                while rap[1] not in candidats_RAP[illa]: #ens quedem amb el millor rap candidat segons indicador
-                    rap=Ie[0][nrap]
-                    nrap+=1
 
-                while rbp[1] not in candidats_RBP[illa]:
-                    rbp=Ie[1][nrbp]
-                    nrbp+=1
+                #rap=min(candidats_RAP, key=lambda x:abs(x-demanda))
+
+
 
                 candidats=[]
                 tipus2=False
-                if rbp[0]<rap[0]: #rbp millor que rap i us_dispos te elements dif de 0
-                    for i,e in enumerate(us_dispos):
-                        if d['PPI'][i][illa]!=0 and e>=demanda/(1-d['PPI'][i][illa]):
-                            candidats.append((e,i)) #candidat_i=(us_dispos,num_illa)
-                    candidats=sorted(candidats, key=lambda indicador: indicador[0]) #ordenem ordre creixent
+                 #rbp millor que rap i us_dispos te elements dif de 0
+                for i,e in enumerate(us_dispos):
+                    if d['PPI'][i][illa]!=0 and e>=demanda/(1-d['PPI'][i][illa]):
+                        candidats.append((e,i)) #candidat_i=(us_dispos,num_illa)
+                candidats=sorted(candidats, key=lambda indicador: indicador[0]) #ordenem ordre creixent
 
-                    if candidats != []:
-
-                        #print('ha entrat amb rap'+str(rap)+' i rbp '+ str(rbp) + 'i us dispos ' + str(us_dispos))
-                        emisora=candidats[0][1]
-                        us_dispos[emisora]-=demanda/(1-d['PPI'][emisora][illa])
-                        enviaments[emisora].append(illa)
-                        elem_illa[illa][1]=rbp[1]
-                        cost_acum+=d['CRBP'][rbp[1]]
-                        tipus2=True
-                        Ii.pop(0)
-
-
-                if rbp[0]>=rap[0] or tipus2==False:
-
+                if candidats != []:
+                    while rbp[1] not in candidats_RBP[illa]:
+                        rbp=Ie[1][nrbp]
+                        nrbp+=1
+                    #print('ha entrat amb rap'+str(rap)+' i rbp '+ str(rbp) + 'i us dispos ' + str(us_dispos))
+                    emisora=candidats[0][1] #agafem candidat que té us_dispos més propera a demanda POTSER AIXO ES PODRIA CANVIAR!!
+                    us_dispos[emisora]-=demanda/(1-d['PPI'][emisora][illa])
+                    enviaments[emisora].append(illa)
+                    elem_illa[illa][1]=rbp[1]
+                    cost_acum+=d['CRBP'][rbp[1]]
+                    Ii.pop(0)
+                else:
+                    while rap[1] not in candidats_RAP[illa]: #ens quedem amb el millor rap candidat segons indicador
+                        rap=l_ie[2][0][nrap] #millor segons cm mes proper a ds nova
+                        nrap+=1
                     elem_illa[illa][0]=rap[1]
                     cost_acum += d['CRAP'][rap[1]]
                     Ii.pop(0)
+
                     us_sobrant=d['CMRAP'][rap[1]]-demanda
-                    #ela=millor_ela(d,Ie[2],us_sobrant)#potser faria una funció per fer més òptima aquesta tria
-                    ela=Ie[2][0][1] #ens quedem amb el primer candidat de la llista segons indicador
+                    if us_sobrant>0:
+                        l_dif= [(Ie[2][i][1],abs(Ie[2][i][0]-us_sobrant)) for i in range(len(Ie[2]))]
+                        l_ela=sorted(l_dif, key=lambda dif: dif[1])
+                        ela=l_ela[0][0]
+
                     if us_sobrant>=d['CMELA'][ela]:
                         us_dispos[illa]=d['CMELA'][ela]
                     else:
@@ -108,14 +110,16 @@ def heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici):
             solucio=[cost_acum,temps_final_i, elem_illa,enviaments]
 
 
-            if l_sol_print==[]:
-                l_sol_print.append([solucio[0],solucio[1],nsol])
+            if l_sol_print4==[]:
+                l_sol_print4.append([solucio[0],solucio[1],nsol])
 
             else:
-                sol_anterior=l_sol_print[-1]
-                if solucio[0]<sol_anterior[0]:
-                    l_sol_print.append([solucio[0],solucio[1],nsol])
-                    print('a')
+                sol_anterior=l_sol_print4[-1][0]
+                if solucio[0]<sol_anterior:
+                    l_sol_print4.append([solucio[0],solucio[1],nsol])
+
+            if solucio[0]<l_sol_print[-1][0]:
+                l_sol_print.append([solucio[0],solucio[1],nsol])
 
             for i in range(len(elem_illa)):
                 for i2 in range(len(elem_illa[i])):
@@ -128,9 +132,9 @@ def heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici):
             cost.append(cost_acum)
             elems.append(elem_illa)
             enviats.append(enviaments)
-            l_sol.append(solucio)
+            l_sol4.append(solucio)
 
             #print('soluuu',solucio)
+    millor_sol=l_sol4[l_sol_print4[-1][2]-1]
 
-    millor_sol=l_sol[l_sol_print[-1][2]-1]
-    return elems, enviats, cost, l_sol_print, l_sol,millor_sol
+    return elems, enviats, cost, l_sol_print4, l_sol4, l_sol_print,millor_sol

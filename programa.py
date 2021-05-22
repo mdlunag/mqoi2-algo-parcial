@@ -3,9 +3,10 @@ from indicadors import generar_indicadors
 from triar_ela import millor_ela
 import time
 from heuristica3 import heuristica3
+from heuristica4 import heuristica4
 
 temps_inici = time.time()
-d=extreure_dades('ejemplar.txt')
+d=extreure_dades('ejemplar_p.txt')
 
 #PREPROCES
 #nova demanda
@@ -67,9 +68,11 @@ l_ii=[IDmin, IDmax, Ippi]
 #l_ie=[ICM]
 #l_ii=[IDmax]
 
-elems, enviats, cost, l_sol_print, l_sol=heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP,l_ECA, temps_inici)
+elems3, enviats3, cost3, l_sol_print3, l_sol3, millor_sol3=heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP,l_ECA, temps_inici)
+elems4, enviats4, cost4, l_sol_print4, l_sol4, l_sol_print,millor_sol=heuristica4(l_ie,l_ii,d, candidats_RAP, candidats_RBP,l_ECA, temps_inici,l_sol_print3)
+
+
 temps_final=time.time()-temps_inici
-millor_sol=l_sol[l_sol_print[-1][2]-1]
 
 
 #escriure fitxer solucio
@@ -95,11 +98,11 @@ with open('sol.txt', 'w') as f:
 
 #print('enviats',enviats)
 
-print('COST',cost)
+print('COST',cost3,cost4)
 
-print('l_sol_print',l_sol_print)
+print('l_sol_print',l_sol_print3,l_sol_print4,l_sol_print)
 
-print('millor_sol',millor_sol)
+print('millor_sol',millor_sol3,  millor_sol)
 
 print('nombre illes: ',d['N'])
 
