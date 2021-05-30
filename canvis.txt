@@ -1,0 +1,5 @@
+postpro
+sumar totes les us que envia cada ELA, mirar si podria posarse una ela amb menys capacitat 
+esborrar elas que no envien
+provar de triar le ELA segons indicador o agafant la que tigui una capacitat mes propera  a les us sobrants
+provar de triar candidats ordenant en ordre creixent o decreixent i seogns us sobrants o ppi

@@ -4,9 +4,11 @@ from triar_ela import millor_ela
 import time
 from heuristica3 import heuristica3
 from heuristica4 import heuristica4
+from heuristica1 import heuristica1
+from postpro import postpro
 
 temps_inici = time.time()
-d=extreure_dades('ejemplar_p.txt')
+d=extreure_dades('ejemplar_prueba_1.txt')
 
 #PREPROCES
 #nova demanda
@@ -16,7 +18,6 @@ DS_nova=[]
 for i in range(len(DS)):
     DS_nova.append(DS[i]/(1-PECA[i]))
 d['DS']=DS_nova
-print('DS_nova',DS_nova)
 
 #escollim el ECA de cada illa
 ECA_i=0
@@ -32,7 +33,7 @@ for i in range(d['N']):
     l_ECA.append(ECA_i)
 #print(l_ECA)
 
-#candidats RAP
+#candidats RAP de cada illa
 candidats_RAP=[]
 candidats_RAP_i=[]
 for i in range(d['N']):
@@ -41,6 +42,7 @@ for i in range(d['N']):
             candidats_RAP_i.append(e)
     candidats_RAP.append(candidats_RAP_i)
     candidats_RAP_i=[]
+
 
 #print(candidats_RAP)
 
@@ -64,12 +66,17 @@ IC,ICC,ICM,IDmin,IDmax,Ippi=generar_indicadors(d)
 #heuristica3
 l_ie=[IC,ICC, ICM]
 l_ii=[IDmin, IDmax, Ippi]
+l_ii_1=[IDmin, IDmax]
+i_postpro=[IC,ICC]
 
 #l_ie=[ICM]
 #l_ii=[IDmax]
 
-elems3, enviats3, cost3, l_sol_print3, l_sol3, millor_sol3=heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP,l_ECA, temps_inici)
-elems4, enviats4, cost4, l_sol_print4, l_sol4, l_sol_print,millor_sol=heuristica4(l_ie,l_ii,d, candidats_RAP, candidats_RBP,l_ECA, temps_inici,l_sol_print3)
+
+elems3, enviats3, cost3, l_sol_print3, l_sol3, millor_sol3=heuristica3(l_ie,l_ii, d, candidats_RAP, candidats_RBP,l_ECA, temps_inici)
+elems1, enviats1, cost1, l_sol_print1, l_sol1, l_sol_print3,millor_sol1=heuristica1(l_ie,l_ii_1, d, candidats_RAP, candidats_RBP, l_ECA, temps_inici, l_sol_print3, millor_sol3)
+elems4, enviats4, cost4, l_sol_print4, l_sol4, l_sol_print,millor_sol4=heuristica4(l_ie,l_ii, d, candidats_RAP, candidats_RBP,l_ECA, temps_inici,l_sol_print3,millor_sol1)
+elems_post, enviats_post, cost_post, l_sol_print_post, l_sol_post, l_sol_print,millor_sol=postpro(l_ie,l_ii, d, candidats_RAP, candidats_RBP,l_ECA, temps_inici,l_sol_print,millor_sol4)
 
 
 temps_final=time.time()-temps_inici
@@ -98,13 +105,14 @@ with open('sol.txt', 'w') as f:
 
 #print('enviats',enviats)
 
-print('COST',cost3,cost4)
+print('COST',cost3,cost1, cost4)
 
-print('l_sol_print',l_sol_print3,l_sol_print4,l_sol_print)
+print('l_sol_print',l_sol_print3,l_sol_print1, l_sol_print4,l_sol_print)
 
 print('millor_sol',millor_sol3,  millor_sol)
 
 print('nombre illes: ',d['N'])
+
 
 
 
