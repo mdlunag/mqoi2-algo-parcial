@@ -5,7 +5,9 @@ import time
 from heuristica3 import heuristica3
 from heuristica4 import heuristica4
 from heuristica1 import heuristica1
+from heuristica5 import heuristica5
 from postpro import postpro
+from heuristica3_aleatoria import heuristica3_aleat
 
 temps_inici = time.time()
 d=extreure_dades('ejemplar_prueba_1.txt')
@@ -67,16 +69,17 @@ IC,ICC,ICM,IDmin,IDmax,Ippi=generar_indicadors(d)
 l_ie=[IC,ICC, ICM]
 l_ii=[IDmin, IDmax, Ippi]
 l_ii_1=[IDmin, IDmax]
-i_postpro=[IC,ICC]
+temps= 60
 
 #l_ie=[ICM]
 #l_ii=[IDmax]
 
 
 elems3, enviats3, cost3, l_sol_print3, l_sol3, millor_sol3=heuristica3(l_ie,l_ii, d, candidats_RAP, candidats_RBP,l_ECA, temps_inici)
-elems1, enviats1, cost1, l_sol_print1, l_sol1, l_sol_print3,millor_sol1=heuristica1(l_ie,l_ii_1, d, candidats_RAP, candidats_RBP, l_ECA, temps_inici, l_sol_print3, millor_sol3)
+elems3a, enviats_3a, cost3a, l_sol_print3a, l_sol3a, l_sol_print,millor_sol3a=heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP,l_ECA, temps_inici,l_sol_print3,millor_sol3)
+elems1, enviats1, cost1, l_sol_print1, l_sol1, l_sol_print,millor_sol1=heuristica1(l_ie,l_ii_1, d, candidats_RAP, candidats_RBP, l_ECA, temps_inici, l_sol_print, millor_sol3a)
 elems4, enviats4, cost4, l_sol_print4, l_sol4, l_sol_print,millor_sol4=heuristica4(l_ie,l_ii, d, candidats_RAP, candidats_RBP,l_ECA, temps_inici,l_sol_print3,millor_sol1)
-elems_post, enviats_post, cost_post, l_sol_print_post, l_sol_post, l_sol_print,millor_sol=postpro(l_ie,l_ii, d, candidats_RAP, candidats_RBP,l_ECA, temps_inici,l_sol_print,millor_sol4)
+elems_post, enviats_post, cost_post, l_sol_print_post, l_sol_post, l_sol_print,millor_sol=heuristica5(l_ie,l_ii, d, candidats_RAP, candidats_RBP,l_ECA, temps_inici,l_sol_print,millor_sol4)
 
 
 temps_final=time.time()-temps_inici
@@ -107,11 +110,13 @@ with open('sol.txt', 'w') as f:
 
 print('COST',cost3,cost1, cost4)
 
-print('l_sol_print',l_sol_print3,l_sol_print1, l_sol_print4,l_sol_print)
+print('l_sol_print',l_sol_print3, l_sol_print1, l_sol_print4,l_sol_print)
 
 print('millor_sol',millor_sol3,  millor_sol)
 
 print('nombre illes: ',d['N'])
+
+print(l_sol_print3a)
 
 
 
