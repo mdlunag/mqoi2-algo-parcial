@@ -133,6 +133,21 @@ def heuristica5(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici, l
                             l_elas.pop(0)
                             ela=l_elas[0][1]
 
+                    if elem_illa[i][0]!=-1: #mirem si podria anar un rap mes barat
+                        enviat=0
+                        for illa_enviada in enviaments[i]:
+                            enviat+=d['DS'][illa_enviada]/(1-d['PPI'][i][illa_enviada])
+                        l_rap=l_ie[0][0].copy() #indicador de preu i raps
+                        rap=l_rap[0][1]
+                        rebut=enviat+d['DS'][i]
+                        while rebut>d['CMRAP'][rap]:
+                            l_rap.pop(0)
+                            rap=l_rap[0][1]
+                        cost_acum-=d['CRAP'][elem_illa[i][0]]
+                        cost_acum+=d['CRAP'][rap]
+                        elem_illa[i][0]=rap
+
+
 
                 temps_final_i=time.time()-temps_inici
 
@@ -145,18 +160,18 @@ def heuristica5(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici, l
                     for i2 in range(len(enviaments[i])):
                                 enviaments[i][i2]+=1
 
-                solucio=[cost_acum,temps_final_i, elem_illa,enviaments]
+                solucio=[cost_acum,temps_final_i, elem_illa,enviaments,'h5']
 
                 if l_sol_print_post==[]:
-                    l_sol_print_post.append([solucio[0],solucio[1],nsol])
+                    l_sol_print_post.append([solucio[0],solucio[1],nsol,'h5'])
 
                 else:
                     sol_anterior=l_sol_print_post[-1][0]
                     if solucio[0]<sol_anterior:
-                        l_sol_print_post.append([solucio[0],solucio[1],nsol])
+                        l_sol_print_post.append([solucio[0],solucio[1],nsol,'h5'])
 
                 if solucio[0]<l_sol_print[-1][0]:
-                    l_sol_print.append([solucio[0],solucio[1],nsol])
+                    l_sol_print.append([solucio[0],solucio[1],nsol,'h5'])
 
 
 

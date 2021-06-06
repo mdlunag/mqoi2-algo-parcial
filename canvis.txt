@@ -1,10 +1,9 @@
-heuri5
-sumar totes les us que envia cada ELA, mirar si podria posarse una ela amb menys capacitat 
-esborrar elas que no envien
-provar de triar le ELA segons indicador o agafant la que tigui una capacitat mes propera  a les us sobrants
-provar de triar candidats ordenant en ordre creixent o decreixent i seogns us sobrants o ppi
+- heuri5 lai
+-sumar totes les us que envia cada ELA, mirar si podria posarse una ela mes barat que compleixi amb la capactat, fer el mateix per raps i rbps 
+-esborrar elas que no envien
+-provar de triar le ELA segons indicador o agafant la que tigui una capacitat mes propera  a les us sobrants
+-provar de triar candidats ordenant en ordre creixent o decreixent i seogns us sobrants o ppi
 nou indicador element= alfa*IC + beta*ICM
 nou indicador illa= alfa*IDmin + beta*IPPI
 nou indicador illa= alfa*IDmax + beta*IPPI
-ordenar illa aleatori
-ordenar element aleatoriament
+-ordenar illa segons indicadors, triar entre els k millors aleatori + ordenar element segons indicadors, triar entre els k millors aleatori (nomes per rap i rbp)

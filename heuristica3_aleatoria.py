@@ -2,7 +2,7 @@ import time
 from unsort import unsort
 import  random
 
-def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici,l_sol_print,millor_sol):
+def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici,l_sol_print,millor_sol,temps3a,k):
     illa=None
     cost=[]
     elems=[] #elements triats pr cada illa i, rap,rbp,ela
@@ -14,12 +14,9 @@ def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_in
     nsol=0
     opcio_candidats=[1,2,3,4] #1 o 2
     opcio_elas=[1,2]
-    k=2
     t_ini=time.time()
     t_final=time.time()
-    print(time.time())
-    print(temps_inici)
-    while t_final-t_ini<100:
+    while t_final-t_ini<temps3a:
         for opcio_candidat in opcio_candidats:
             for opcio_ela in opcio_elas:
                 for ie in range(len(l_ie)):
@@ -40,9 +37,8 @@ def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_in
                         while len(Ii)>0:
 
                             k_illa=min(k,len(Ii))-1
-
-
-                            illa=Ii[random.randint(0,k_illa)][1] #num illa
+                            nilla=random.randint(0,k_illa)
+                            illa=Ii[nilla][1] #num illa
                             demanda=d['DS'][illa]
                             l_rap=[]
                             l_rbp=[]
@@ -51,7 +47,7 @@ def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_in
                             rap=(-1,-1)
                             rbp=(-1,-1)
 
-                            for e in range(len(Ie[0])+1): #ens quedem amb el millor rap candidat segons indicador
+                            for e in range(len(Ie[0])+1):
                                 if rap[1] in candidats_RAP[illa]:
                                     l_rap.append(rap)
                                 if nrap!=len(Ie[0]):
@@ -62,7 +58,7 @@ def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_in
                                 k_rap=min(k,len(l_rap))-1
                                 rap=l_rap[random.randint(0,k_rap)]
                             else:
-                                rap=l_rap
+                                rap=l_rap[0]
 
                             for e in range(len(Ie[1])+1): #ens quedem amb el millor rap candidat segons indicador
                                 if rbp[1] in candidats_RBP[illa]:
@@ -77,11 +73,7 @@ def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_in
                             else:
                                 rbp=l_rbp[0]
 
-
-
-
-
-
+                            candidats=[]
                             candidats_ppi=[]
                             candidats_us=[]
                             tipus2=False
@@ -92,6 +84,7 @@ def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_in
 
                                         candidats_ppi.append((d['PPI'][i][illa],i)) #candidat_i=(us_dispos,num_illa)
                                         candidats_us.append((e,i)) #candidat_i=(us_dispos,num_illa)
+
                                 if opcio_candidat==1:
                                     candidats=sorted(candidats_ppi, key=lambda indicador: indicador[0]) #ordenem ordre creixent de ppi
                                 if opcio_candidat==2:
@@ -100,24 +93,24 @@ def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_in
                                     candidats=sorted(candidats_us, key=lambda indicador: indicador[0])
                                 if opcio_candidat==4:
                                     candidats=sorted(candidats_us, key=lambda indicador: indicador[0],reverse=True)
-
+                                k_candidat=min(k,len(candidats))-1
                                 if candidats != []:
 
                                     #print('ha entrat amb rap'+str(rap)+' i rbp '+ str(rbp) + 'i us dispos ' + str(us_dispos))
-                                    emisora=candidats[0][1]
+                                    emisora=candidats[random.randint(0,k_candidat)][1]
                                     us_dispos[emisora]-=demanda/(1-d['PPI'][emisora][illa])
                                     enviaments[emisora].append(illa)
                                     elem_illa[illa][1]=rbp[1]
                                     cost_acum+=d['CRBP'][rbp[1]]
                                     tipus2=True
-                                    Ii.pop(0)
+                                    Ii.pop(nilla)
 
 
                             if rbp[0]>=rap[0] or tipus2==False:
 
                                 elem_illa[illa][0]=rap[1]
                                 cost_acum += d['CRAP'][rap[1]]
-                                Ii.pop(0)
+                                Ii.pop(nilla)
                                 us_sobrant=d['CMRAP'][rap[1]]-demanda
                                 #ela=millor_ela(d,Ie[2],us_sobrant)#potser faria una funció per fer més òptima aquesta tria
                                 if opcio_ela==1:
@@ -153,9 +146,48 @@ def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_in
                                     enviat+=d['DS'][illa_enviada]/(1-d['PPI'][i][illa_enviada])
                                 l_elas=l_ie[0][2].copy() #indicador de preu i elas
                                 ela=l_elas[0][1]
-                                while enviat>d['CMELA'][ela] and len(l_elas)>1:
+                                while enviat>d['CMELA'][ela]:
                                     l_elas.pop(0)
                                     ela=l_elas[0][1]
+                                cost_acum-=d['CELA'][elem_illa[i][2]]
+                                cost_acum+=d['CELA'][ela]
+                                elem_illa[i][2]=ela
+
+                            if elem_illa[i][0]!=-1: #mirem si podria anar un rap mes barat
+                                enviat=0
+                                l_rap_preu=[]
+                                for illa_enviada in enviaments[i]:
+                                    enviat+=d['DS'][illa_enviada]/(1-d['PPI'][i][illa_enviada])
+                                l_rap_preu=l_ie[0][0].copy() #indicador de preu i raps
+                                rap=l_rap_preu[0][1]
+                                rebut=enviat+d['DS'][i]
+                                while rebut>d['CMRAP'][rap]:
+                                    l_rap_preu.pop(0)
+                                    rap=l_rap_preu[0][1]
+                                cost_acum-=d['CRAP'][elem_illa[i][0]]
+                                cost_acum+=d['CRAP'][rap]
+                                elem_illa[i][0]=rap
+
+                            if elem_illa[i][1]!=-1: #mirem si podria anar un rbp mes barat
+                                rebut=d['DS'][i]
+                                l_rbp_preu=[]
+                                rbp=(-1,-1)
+                                nrbp=0
+                                for e in range(len(l_ie[0][1])+1):
+
+                                    if rbp[1] in candidats_RBP[i]:
+                                        l_rbp_preu.append(rbp)
+                                    if nrbp!=len(l_ie[0][1]):
+                                        rbp=Ie[1][nrbp]
+                                    nrbp+=1
+                                rbp=l_rbp_preu[0]
+
+                                while rebut>d['CMRBP'][rbp[1]]:
+                                    l_rbp_preu.pop(0)
+                                    rbp=l_rbp_preu[0][1]
+                                cost_acum-=d['CRBP'][elem_illa[i][1]]
+                                cost_acum+=d['CRBP'][rbp[1]]
+                                elem_illa[i][1]=rbp[1]
 
 
 
@@ -173,18 +205,18 @@ def heuristica3_aleat(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_in
                             for i2 in range(len(enviaments[i])):
                                         enviaments[i][i2]+=1
 
-                        solucio=[cost_acum,temps_final_i, elem_illa,enviaments]
+                        solucio=[cost_acum,temps_final_i, elem_illa,enviaments,'h3a']
 
                         if l_sol_print3a==[]:
-                            l_sol_print3a.append([solucio[0],solucio[1],nsol])
+                            l_sol_print3a.append([solucio[0],solucio[1],nsol,'h3a'])
 
                         else:
                             sol_anterior=l_sol_print3a[-1][0]
                             if solucio[0]<sol_anterior:
-                                l_sol_print3a.append([solucio[0],solucio[1],nsol])
+                                l_sol_print3a.append([solucio[0],solucio[1],nsol,'h3a'])
 
                         if solucio[0]<l_sol_print[-1][0]:
-                            l_sol_print.append([solucio[0],solucio[1],nsol])
+                            l_sol_print.append([solucio[0],solucio[1],nsol,'h3a'])
 
 
                         cost.append(cost_acum)

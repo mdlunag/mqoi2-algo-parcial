@@ -120,9 +120,44 @@ def heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici):
                             while enviat>d['CMELA'][ela]:
                                 l_elas.pop(0)
                                 ela=l_elas[0][1]
+                            cost_acum-=d['CELA'][elem_illa[i][2]]
+                            cost_acum+=d['CELA'][ela]
+                            elem_illa[i][2]=ela
 
+                        if elem_illa[i][0]!=-1: #mirem si podria anar un rap mes barat
+                            enviat=0
+                            for illa_enviada in enviaments[i]:
+                                enviat+=d['DS'][illa_enviada]/(1-d['PPI'][i][illa_enviada])
+                            l_rap=l_ie[0][0].copy() #indicador de preu i raps
+                            rap=l_rap[0][1]
+                            rebut=enviat+d['DS'][i]
+                            while rebut>d['CMRAP'][rap]:
+                                l_rap.pop(0)
+                                rap=l_rap[0][1]
+                            cost_acum-=d['CRAP'][elem_illa[i][0]]
+                            cost_acum+=d['CRAP'][rap]
+                            elem_illa[i][0]=rap
 
+                        if elem_illa[i][1]!=-1: #mirem si podria anar un rbp mes barat
+                            rebut=d['DS'][i]
+                            l_rbp_preu=[]
+                            rbp=(-1,-1)
+                            nrbp=0
+                            for e in range(len(l_ie[0][1])+1):
 
+                                if rbp[1] in candidats_RBP[i]:
+                                    l_rbp_preu.append(rbp)
+                                if nrbp!=len(l_ie[0][1]):
+                                    rbp=Ie[1][nrbp]
+                                nrbp+=1
+                            rbp=l_rbp_preu[0]
+
+                            while rebut>d['CMRBP'][rbp[1]]:
+                                l_rbp_preu.pop(0)
+                                rbp=l_rbp_preu[0][1]
+                            cost_acum-=d['CRBP'][elem_illa[i][1]]
+                            cost_acum+=d['CRBP'][rbp[1]]
+                            elem_illa[i][1]=rbp[1]
 
                     temps_final_i=time.time()-temps_inici
 
@@ -135,16 +170,16 @@ def heuristica3(l_ie,l_ii,d, candidats_RAP, candidats_RBP, l_ECA, temps_inici):
                         for i2 in range(len(enviaments[i])):
                                     enviaments[i][i2]+=1
 
-                    solucio=[cost_acum,temps_final_i, elem_illa,enviaments]
+                    solucio=[cost_acum,temps_final_i, elem_illa,enviaments,'h3']
 
                     if l_sol_print==[]:
-                        l_sol_print.append([solucio[0],solucio[1],nsol])
+                        l_sol_print.append([solucio[0],solucio[1],nsol,'h3'])
 
                     else:
                         sol_anterior=l_sol_print[-1]
                         if solucio[0]<sol_anterior[0]:
-                            l_sol_print.append([solucio[0],solucio[1],nsol])
-                            print([solucio[0],solucio[1],nsol])
+                            l_sol_print.append([solucio[0],solucio[1],nsol,'h3'])
+
 
 
 
